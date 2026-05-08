@@ -106,6 +106,7 @@ class IngestAgent:
         3. Important timestamps to note
         4. Moments that are signaled as important 
         """
+
         try:
             response = self.client.messages.create(
                 model="claude-sonnet-4-5",
@@ -114,12 +115,12 @@ class IngestAgent:
             )
             return response.content[0].text
         except Exception:
-            raise ValueError("Response failed,")
+            raise ValueError("Response from Claude failed")
     def store(self, video_id, transcript, structure):
         #implement Azure Blob Storage caching
         pass
 
-if __name__ == "__main__":
-    agent = IngestAgent()
-    result = agent.run("https://www.youtube.com/watch?v=scL2pbCgMRQ&t=1s","exam prep")
-    print(result)
+# if __name__ == "__main__":
+    # agent = IngestAgent()
+    # result = agent.run("https://www.youtube.com/watch?v=scL2pbCgMRQ&t=1s","exam prep")
+    # print(result)
