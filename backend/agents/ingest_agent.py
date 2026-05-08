@@ -48,8 +48,20 @@ class IngestAgent:
                 "video_id": video_id,
                 "transcript": raw_data
             }
-        except Exception as e:
-            raise ValueError(f"Could not fetch transcript: {str(e)}")      
+        except NoTranscriptFound:
+            raise ValueError("No captions found for this video")
+        except TranscriptsDisabled:
+            raise ValueError("Captions are disabled for this video")
+        except VideoUnavailable:
+            raise ValueError("Video is private, deleted, or doesn't exist")
+        except IpBlocked:
+            raise ValueError("IP blocked by YouTube")
+        except RequestBlocked:
+            raise ValueError("Request blocked by YouTube")
+        except InvalidVideoId:
+            raise ValueError("Invalid video ID")
+        except Exception:
+            raise ValueError("Could not fetch transcript")
 
     # def analyze_structure(self, transcript, goal)
     # def store(self, video_id, transcript, structure)
