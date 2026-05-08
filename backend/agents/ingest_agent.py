@@ -1,5 +1,6 @@
 import anthropic
 from youtube_transcript_api import (
+    YouTubeTranscriptApi,
     NoTranscriptFound,
     TranscriptsDisabled,
     VideoUnavailable,
@@ -18,6 +19,14 @@ class IngestAgent:
 
     def run(self, url, goal):
         video_id = self.validate(url)
+        transcript = self.fetch_transcript(video_id)
+        structure = self.analyze_structure(transcript["transcript"],goal)
+        self.store(video_id,transcript,structure)
+
+        return{
+            "transcript": transcript,
+            "structure": structure
+        }
 
     def validate(self, url):
         parsed = urlparse(url)
@@ -99,11 +108,18 @@ class IngestAgent:
         """
         try:
             response = self.client.messages.create(
-                model="claude-sonnet-4-20250514",
+                model="claude-sonnet-4-5",
                 max_tokens=4000,
                 messages=[{"role": "user","content": prompt}]
             )
             return response.content[0].text
         except Exception:
-            raise ValueError("Response failed")
-    # def store(self, video_id, transcript, structure)
+            raise ValueError("Response failed,")
+    def store(self, video_id, transcript, structure):
+        #implement Azure Blob Storage caching
+        pass
+
+if __name__ == "__main__":
+    agent = IngestAgent()
+    result = agent.run("https://www.youtube.com/watch?v=scL2pbCgMRQ&t=1s","exam prep")
+    print(result)
