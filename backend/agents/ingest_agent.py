@@ -63,5 +63,47 @@ class IngestAgent:
         except Exception:
             raise ValueError("Could not fetch transcript")
 
-    # def analyze_structure(self, transcript, goal)
+    def analyze_structure(self, transcript, goal):
+        #region note on claude prompt
+        ''' 
+        Im not sure how granular the return section
+        has to be. There are a ton of things that I can
+        think of: Suggestions, how many times a specific
+        word or concept was spoken about, how was x thing
+        spoken about, personal opinion on what should be 
+        focused on.
+        I wanted to lock down the user input, but If their
+        goal is to do well on x assignment, it would be good
+        if they could tell agent and the output would be based
+        on that success.
+        '''
+        #endregion
+    
+        prompt = f"""
+        You are analyzing a lecture transcrpt. Find
+        key points in the lecture that will assit 
+        user in learning in the most efficient
+        way possible depending on their learning goals. 
+        Chunk the video into 3 parts begining, middle, 
+        and end. And make note of improtant time stamps 
+        so they can easily find them. 
+
+        Student goal: {goal}
+        Transcript: {transcript}
+
+        Return:
+        1. Three sections (beginning, middle, end) with start time stamps
+        2. Key terms introduced in each section
+        3. Important timestamps to note
+        4. Moments that are signaled as important 
+        """
+        try:
+            response = self.client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=4000,
+                messages=[{"role": "user","content": prompt}]
+            )
+            return response.content[0].text
+        except Exception:
+            raise ValueError("Response failed")
     # def store(self, video_id, transcript, structure)
