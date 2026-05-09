@@ -1,5 +1,6 @@
 #main
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
 from agents.ingest_agent import IngestAgent
 from agents.study_agent import StudyAgent
 from agents.query_agent import QueryAgent
@@ -84,8 +85,11 @@ async def export(outline: str, summaries: str, flashcards: str):
         query = QueryAgent()
         result = query.export_pdf(outline, summaries, flashcards)
 
-        return result
-
+        return Response(
+                content=result,
+                media_type="application/pdf",
+                headers={"Content-Disposition": "attachment; filename=study_pack.pdf"}
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception:

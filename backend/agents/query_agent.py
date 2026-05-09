@@ -87,19 +87,23 @@ class QueryAgent:
         try:
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_font("Arial", size=12)
+            pdf.set_font("helvetica", size=12)
 
+            def safe_text(text):
+                return text.encode('latin-1','replace').decode('latin-1')
             pdf.cell(200, 10, txt="OUTLINE", ln=True)
-            pdf.multi_cell(0, 10, txt=outline)
+            pdf.multi_cell(0, 10, txt=safe_text(outline))
 
             pdf.add_page()
             pdf.cell(200, 10, txt="SUMMARIES", ln=True)
-            pdf.multi_cell(0, 10, txt=summaries)
+            pdf.multi_cell(0, 10, txt=safe_text(summaries))
 
             pdf.add_page()
             pdf.cell(200, 10, txt="FLASHCARDS", ln=True)
-            pdf.multi_cell(0, 10, txt=flashcards)
+            pdf.multi_cell(0, 10, txt=safe_text(flashcards))
             
-            return pdf.output(dest="S").encode("latin-1")
+            return bytes(pdf.output())
         except Exception:
             raise ValueError("PDF export failed")
+        # except Exception as e:
+        #     raise ValueError(f"PDF export failed: {str(e)}")
