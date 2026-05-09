@@ -67,7 +67,6 @@ class StudyAgent:
         except Exception:
             raise ValueError("Response from Claude failed")
 
-            
     def generate_sumaries(self, transcript, goal):
             prompt = f""" 
             You are an expert academic study assistant.
@@ -147,7 +146,7 @@ class StudyAgent:
             return response.content[0].text
         except Exception:
             raise ValueError("Response from Claude Failed")
-        
+
 if __name__ == "__main__":
     from agents.ingest_agent import IngestAgent
     
