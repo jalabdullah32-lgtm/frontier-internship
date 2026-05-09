@@ -1,3 +1,4 @@
+#main
 from fastapi import FastAPI, HTTPException
 from agents.ingest_agent import IngestAgent
 from agents.study_agent import StudyAgent
@@ -7,6 +8,10 @@ app = FastAPI()
 
 @app.post("/analyze")
 async def analyze(url: str, goal: str):
+
+    if len(goal.split()) > 50:
+        raise HTTPException(status_code=400, detail="Goal must be under 50 words")
+
     try:
         ingest = IngestAgent()
         ingest_result = ingest.run(url, goal)
@@ -15,14 +20,19 @@ async def analyze(url: str, goal: str):
         study_result = study.run(
             goal=goal,
             structure=ingest_result["structure"],
-            transcript=ingest_result["transcript"]
+            transcript=ingest_result["compressed"]
         )
-        return study_result
+        return {
+            "outline": study_result["outline"],
+            "summaries": study_result["summaries"],
+            "flashcards": study_result["flashcards"],
+            "compressed": study_result["compressed"]
+        }
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception:
-        raise HTTPException(status_code=500, detail="Something went wrong")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/search")

@@ -20,14 +20,15 @@ class IngestAgent:
     def run(self, url, goal):
         video_id = self.validate(url)
         transcript = self.fetch_transcript(video_id)
-        structure = self.analyze_structure(transcript["transcript"],goal)
+        compressed = self.compress_transcript(transcript["transcript"])
+        structure = self.analyze_structure(compressed, goal)
         self.store(video_id,transcript,structure)
 
         return{
             "transcript": transcript,
-            "structure": structure
+            "structure": structure,
+            "compressed": compressed
         }
-
     def validate(self, url):
         parsed = urlparse(url)
 
@@ -44,15 +45,11 @@ class IngestAgent:
         video_id = params["v"] [0]
         return video_id
 
-    # grab video_id from validate
-    # Pass it into youtubeapi import 
-    # grab transcript and other video data
-    # return those fields
     def fetch_transcript(self, video_id):
         try:
             ytt_api = YouTubeTranscriptApi()
             fetched = ytt_api.fetch(video_id)
-            raw_data = fetched.to_raw_data()
+            raw_data = fetched.to_raw_data()                
             return {
                 "video_id": video_id,
                 "transcript": raw_data
@@ -71,6 +68,11 @@ class IngestAgent:
             raise ValueError("Invalid video ID")
         except Exception:
             raise ValueError("Could not fetch transcript")
+
+    def compress_transcript(self, raw_data):
+        full_text = " ".join([t["text"]for t in raw_data])
+        
+        return full_text[:8000]
 
     def analyze_structure(self, transcript, goal):
         #region note on claude prompt

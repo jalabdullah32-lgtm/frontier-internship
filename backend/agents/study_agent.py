@@ -11,9 +11,9 @@ class StudyAgent:
         self.client = anthropic.Anthropic()
 
     def run(self, goal, structure, transcript):
-        outline = self.generate_outline(transcript["transcript"], structure, goal)
-        summaries = self.generate_sumaries(transcript["transcript"], goal)
-        flashcards = self.generate_flashcards(transcript["transcript"], goal)
+        outline = self.generate_outline(transcript, structure, goal)
+        summaries = self.generate_sumaries(transcript, goal)
+        flashcards = self.generate_flashcards(transcript, goal)
         return{
             "outline": outline,
             "summaries": summaries,
