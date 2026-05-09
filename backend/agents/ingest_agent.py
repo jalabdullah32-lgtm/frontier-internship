@@ -33,7 +33,7 @@ class IngestAgent:
         parsed = urlparse(url)
 
         if parsed.netloc not in ["www.youtube.com", "youtube.com", "youtu.be"]:
-            raise ValueError("not a vaild input")
+            raise ValueError("Please enter a valid YouTube URL.")
 
         if "/shorts/" in parsed.path:
             raise ValueError("Shorts are not supported, please use a lecture video")
@@ -72,7 +72,7 @@ class IngestAgent:
     def compress_transcript(self, raw_data):
         full_text = " ".join([t["text"]for t in raw_data])
         
-        return full_text[:8000]
+        return full_text[:15000]
 
     def analyze_structure(self, transcript, goal):
         #region note on claude prompt

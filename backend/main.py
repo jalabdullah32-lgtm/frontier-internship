@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from agents.ingest_agent import IngestAgent
 from agents.study_agent import StudyAgent
 from agents.query_agent import QueryAgent
+from fpdf import FPDF
 
 app = FastAPI()
 
@@ -15,7 +16,7 @@ async def analyze(url: str, goal: str):
     try:
         ingest = IngestAgent()
         ingest_result = ingest.run(url, goal)
-
+    
         study = StudyAgent()
         study_result = study.run(
             goal=goal,
@@ -26,7 +27,7 @@ async def analyze(url: str, goal: str):
             "outline": study_result["outline"],
             "summaries": study_result["summaries"],
             "flashcards": study_result["flashcards"],
-            "compressed": study_result["compressed"]
+            "compressed": ingest_result["compressed"]
         }
 
     except ValueError as e:
