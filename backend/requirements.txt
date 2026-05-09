@@ -1,5 +1,8 @@
 fastapi
+uvicorn
 anthropic
 youtube-transcript-api
 python-dotenv
-uvicorn
+fpdf2
+deep-translator
+pytube
