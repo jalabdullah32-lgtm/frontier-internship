@@ -8,6 +8,8 @@ from youtube_transcript_api import (
     RequestBlocked,
     InvalidVideoId
 )
+from youtube_transcript_api.proxies import GenericProxyConfig
+import os
 from dotenv import load_dotenv
 from urllib.parse import urlparse, parse_qs
 
@@ -47,7 +49,10 @@ class IngestAgent:
 
     def fetch_transcript(self, video_id):
         try:
-            ytt_api = YouTubeTranscriptApi()
+            ytt_api = YouTubeTranscriptApi(
+                    proxy_config=GenericProxyConfig(
+                    http_url=os.getenv("PROXY_URL"),
+                    https_url=os.getenv("PROXY_URL")))
             fetched = ytt_api.fetch(video_id)
             raw_data = fetched.to_raw_data()                
             return {
