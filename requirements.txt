@@ -1,3 +1,4 @@
+# dependencies
 fastapi
 uvicorn
 anthropic
@@ -5,4 +6,4 @@ youtube-transcript-api
 python-dotenv
 fpdf2
 deep-translator
-pytube
+
