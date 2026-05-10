@@ -71,8 +71,8 @@ class IngestAgent:
             raise ValueError("Request blocked by YouTube")
         except InvalidVideoId:
             raise ValueError("Invalid video ID")
-        except Exception:
-            raise ValueError("Could not fetch transcript")
+        except Exception as e:
+            raise ValueError(f"Could not fetch transcript: {str(e)}")
 
     def compress_transcript(self, raw_data):
         full_text = " ".join([t["text"]for t in raw_data])
@@ -121,8 +121,9 @@ class IngestAgent:
                 messages=[{"role": "user","content": prompt}]
             )
             return response.content[0].text
-        except Exception:
-            raise ValueError("Response from Claude failed")
+        except Exception as e:
+            raise ValueError(f"Response from Claude failed: {str(e)}")
+
     def store(self, video_id, transcript, structure):
         #implement Azure Blob Storage caching
         pass
