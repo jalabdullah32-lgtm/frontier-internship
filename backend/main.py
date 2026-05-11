@@ -1,4 +1,7 @@
 #main
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import Response
 from agents.ingest_agent import IngestAgent
@@ -7,6 +10,15 @@ from agents.query_agent import QueryAgent
 from fpdf import FPDF
 
 app = FastAPI()
+
+@app.get("/debug")
+async def debug():
+    import os
+    proxy = os.getenv("PROXY_URL")
+    return {
+        "proxy_set": proxy is not None,
+        "proxy_starts_with": proxy[:20] if proxy else "None"
+    }
 
 @app.post("/analyze")
 async def analyze(url: str, goal: str):
