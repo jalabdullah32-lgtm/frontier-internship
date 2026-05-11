@@ -11,14 +11,6 @@ from fpdf import FPDF
 
 app = FastAPI()
 
-@app.get("/debug")
-async def debug():
-    import os
-    proxy = os.getenv("PROXY_URL")
-    return {
-        "proxy_set": proxy is not None,
-        "proxy_starts_with": proxy[:20] if proxy else "None"
-    }
 
 @app.post("/analyze")
 async def analyze(url: str, goal: str):
