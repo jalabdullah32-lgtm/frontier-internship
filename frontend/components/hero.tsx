@@ -15,17 +15,20 @@ export function Hero({ url, setUrl, onSubmit, error }: HeroProps) {
   return (
     <section className="relative z-10 py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="space-y-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] text-foreground animate-fade-in-up">
-              Drop a lecture.
-              <br />
-              <span className="italic font-normal text-muted-foreground">Get instant notes.</span>
-            </h1>
+        <div className="grid lg:grid-cols-[52fr_48fr] gap-10 lg:gap-14 items-center">
 
-            <p className="text-lg text-muted-foreground max-w-md leading-relaxed animate-fade-in-up animation-delay-100">
-              Paste any YouTube lecture and we&apos;ll turn it into summaries, flashcards, and searchable notes. No more rewinding. No more stress.
-            </p>
+          {/* Left */}
+          <div className="space-y-7">
+            <div className="space-y-5 animate-fade-in-up">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08] text-foreground">
+                Turn any lecture into a
+                <br />
+                <span className="italic font-normal text-muted-foreground">complete study session.</span>
+              </h1>
+              <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
+                Paste a YouTube lecture URL. Our AI agents build your outline, summaries, flashcards, and semantic search — so you can study the 20% that matters, not rewatch 100% of the video.
+              </p>
+            </div>
 
             <form onSubmit={onSubmit} className="animate-fade-in-up animation-delay-200">
               <div className="flex flex-col sm:flex-row gap-3">
@@ -47,7 +50,8 @@ export function Hero({ url, setUrl, onSubmit, error }: HeroProps) {
             </form>
           </div>
 
-          <div className="hidden lg:block animate-fade-in-up animation-delay-300">
+          {/* Right — wider preview card */}
+          <div className="hidden lg:block animate-fade-in-up animation-delay-300 w-full">
             <PreviewCard />
           </div>
         </div>

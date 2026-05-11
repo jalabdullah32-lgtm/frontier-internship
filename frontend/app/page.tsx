@@ -5,7 +5,7 @@ import { Sparkles } from "lucide-react"
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { Features } from "@/components/features"
-import { HowItWorks } from "@/components/how-it-works"
+import { InputSection } from "@/components/input-section"
 import { Footer } from "@/components/footer"
 import { FloatingElements } from "@/components/floating-elements"
 import { ResultsView } from "@/components/results-view"
@@ -130,14 +130,9 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-
               <div className="hidden lg:block">
                 <div className="rounded-3xl overflow-hidden border border-border/50 shadow-xl aspect-video">
-                  <img
-                    src={videoMeta.thumbnailUrl}
-                    alt="thumbnail"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={videoMeta.thumbnailUrl} alt="thumbnail" className="w-full h-full object-cover" />
                 </div>
                 <div className="mt-3 px-1">
                   <p className="text-sm font-semibold text-foreground truncate">{videoMeta.title}</p>
@@ -198,19 +193,14 @@ export default function Home() {
     )
   }
 
-  // Home screen
+  // Home screen — new page flow
   return (
     <main className="relative min-h-screen overflow-hidden">
       <FloatingElements />
       <Header />
-      {error && (
-        <div className="relative z-10 mx-auto max-w-6xl px-6 pt-4">
-          <p className="text-sm text-destructive font-mono bg-destructive/10 px-4 py-2 rounded-xl">{error}</p>
-        </div>
-      )}
       <Hero url={url} setUrl={setUrl} onSubmit={handleUrlSubmit} error={error} />
       <Features />
-      <HowItWorks />
+      <InputSection url={url} setUrl={setUrl} onSubmit={handleUrlSubmit} error={error} />
       <Footer />
     </main>
   )

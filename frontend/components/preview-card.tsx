@@ -65,31 +65,31 @@ export function PreviewCard() {
   }, [])
 
   return (
-    <div className="relative pb-6">
-      <div className="bg-card rounded-3xl border border-border/50 shadow-xl overflow-hidden hover:scale-[1.02] transition-all duration-500">
+    <div className="relative pb-8">
+      <div className="bg-card rounded-3xl border border-border/50 shadow-2xl overflow-hidden hover:scale-[1.01] transition-all duration-500">
 
-        {/* Thumbnail — fixed height */}
-        <div className="relative w-full h-44 bg-muted overflow-hidden">
+        {/* Thumbnail — taller, more imposing */}
+        <div className="relative w-full h-56 bg-muted overflow-hidden">
           <img
             src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
             alt="thumbnail"
             className="w-full h-full object-cover transition-opacity duration-500"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3">
-            <p className="text-sm font-semibold text-white truncate">{video.title}</p>
-            <p className="text-xs text-white/70 font-mono">{video.duration}</p>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-6 py-4">
+            <p className="text-base font-semibold text-white truncate">{video.title}</p>
+            <p className="text-xs text-white/70 font-mono mt-0.5">{video.duration}</p>
           </div>
         </div>
 
-        {/* Key concepts — fixed height to prevent shift */}
-        <div className="p-5 border-b border-border/30 h-[130px]">
+        {/* Key concepts */}
+        <div className="px-6 pt-5 pb-5 border-b border-border/30 h-[148px]">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-mono">
             Key Concepts
           </p>
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             {video.concepts.map((c, i) => (
-              <div key={i} className="flex items-baseline gap-2 text-sm text-foreground">
-                <span className="font-mono text-xs text-accent-foreground bg-accent/30 px-2 py-0.5 rounded shrink-0">
+              <div key={i} className="flex items-baseline gap-3 text-sm text-foreground">
+                <span className="font-mono text-xs text-accent-foreground bg-accent/30 px-2.5 py-0.5 rounded shrink-0">
                   {c.time}
                 </span>
                 <span className="truncate">{c.text}</span>
@@ -98,8 +98,8 @@ export function PreviewCard() {
           </div>
         </div>
 
-        {/* Flashcard — fixed height to prevent shift */}
-        <div className="p-5 h-[130px]">
+        {/* Flashcard */}
+        <div className="px-6 pt-5 pb-5 h-[148px]">
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3 font-mono">
             Sample Flashcard
           </p>
@@ -113,7 +113,7 @@ export function PreviewCard() {
           </div>
         </div>
 
-        {/* Dots inside card */}
+        {/* Dots */}
         <div className="flex justify-center gap-2 pb-5">
           {VIDEOS.map((_, i) => (
             <button

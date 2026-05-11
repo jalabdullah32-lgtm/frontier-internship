@@ -182,3 +182,8 @@
 .animation-delay-400 {
   animation-delay: 400ms;
 }
+
+/* Hide Next.js dev error overlay button */
+nextjs-portal {
+  display: none !important;
+}

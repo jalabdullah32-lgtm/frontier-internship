@@ -4,17 +4,17 @@ const steps = [
   {
     number: "01",
     title: "Paste the link",
-    description: "Grab the URL from any YouTube lecture, podcast, or educational video.",
+    description: "Grab the URL from any public YouTube lecture. If the video has captions, we can process it.",
   },
   {
     number: "02",
-    title: "We do the magic",
-    description: "Our AI watches, listens, and extracts all the important stuff in under a minute.",
+    title: "Agents get to work",
+    description: "Three AI agents run in parallel — one structures the outline, one writes summaries, one builds flashcards. It takes a couple of minutes. Good things do.",
   },
   {
     number: "03",
     title: "Study your way",
-    description: "Browse summaries, flip through flashcards, or search for specific topics.",
+    description: "Browse the outline, flip flashcards, or search for any topic by asking a question in plain English.",
   },
 ]
 
@@ -42,17 +42,14 @@ export function HowItWorks() {
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-px bg-border" />
               )}
-              
+
               <div className="relative bg-card rounded-3xl border border-border/50 p-8 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
-                {/* Number */}
                 <div className="text-6xl font-bold text-muted/50 mb-4 font-mono">
                   {step.number}
                 </div>
-                
                 <h3 className="text-xl font-semibold text-foreground mb-3">
                   {step.title}
                 </h3>
-                
                 <p className="text-muted-foreground leading-relaxed">
                   {step.description}
                 </p>
@@ -64,13 +61,16 @@ export function HowItWorks() {
         {/* CTA */}
         <div className="mt-16 text-center">
           <p className="text-lg text-foreground font-semibold mb-2">
-            Ready to try it out?
+            Ready to try it?
           </p>
           <p className="text-muted-foreground mb-6">
-            It&apos;s free. No signup required. Just paste and go.
+            No signup required. Just paste and go.
           </p>
-          <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          <button
+            onClick={() => {
+              const el = document.getElementById("url-input")
+              if (el) el.scrollIntoView({ behavior: "smooth" })
+            }}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all duration-300 hover:scale-105"
           >
             Try it now — it&apos;s free
