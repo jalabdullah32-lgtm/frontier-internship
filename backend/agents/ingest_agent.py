@@ -94,24 +94,24 @@ class IngestAgent:
         on that success.
         '''
         #endregion
-    
+
         prompt = f"""
-        You are analyzing a lecture transcrpt. Find
-        key points in the lecture that will assit 
-        user in learning in the most efficient
-        way possible depending on their learning goals. 
-        Chunk the video into 3 parts begining, middle, 
-        and end. And make note of improtant time stamps 
-        so they can easily find them. 
+        SYSTEM:
+        You are a lecture analyst. Your job is to produce a clean, scannable structural outline of a lecture for a student who needs to study efficiently. Output markdown only. No preamble, no meta-commentary.
 
-        Student goal: {goal}
-        Transcript: {transcript}
+        USER:
+        Analyze this lecture transcript and produce a structured outline. Follow these rules exactly:
 
-        Return:
-        1. Three sections (beginning, middle, end) with start time stamps
-        2. Key terms introduced in each section
-        3. Important timestamps to note
-        4. Moments that are signaled as important 
+        - Divide the lecture into 2-4 logical sections based on topic shifts, not arbitrary time splits.
+        - Each section: a heading with the time range, one sentence stating the core concept, then timestamped bullet points for key moments only — skip filler, transitions, and housekeeping.
+        - Timestamps go in parentheses like (1:23), not bold labels.
+        - One "Key terms" line per section, comma-separated. No bullets, no bolding of individual terms.
+        - End with a single "Traffic flow" or "Core framework" block only if the lecture contains a process or architecture worth diagramming. Plain text or minimal ASCII only.
+        - No emoji. No ALL CAPS. No redundant labels. If a section header already says "0:00–3:00", don't repeat "Start Time: 0:00" inside it.
+        - Do not add any section that wasn't in the lecture (no "exam strategy", no "additional resources" unless the lecturer explicitly recommended them).
+
+        Transcript:
+        {transcript}        
         """
 
         try:
@@ -127,8 +127,3 @@ class IngestAgent:
     def store(self, video_id, transcript, structure):
         #implement Azure Blob Storage caching
         pass
-
-# if __name__ == "__main__":
-    # agent = IngestAgent()
-    # result = agent.run("https://www.youtube.com/watch?v=scL2pbCgMRQ&t=1s","exam prep")
-    # print(result)

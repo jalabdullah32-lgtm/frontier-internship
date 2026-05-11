@@ -1,4 +1,3 @@
-#main
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -16,12 +15,13 @@ app = FastAPI()
 async def analyze(url: str, goal: str):
 
     if len(goal.split()) > 50:
-        raise HTTPException(status_code=400, detail="Goal must be under 50 words")
+        raise HTTPException(status_code=400,
+            detail="Goal must be under 50 words")
 
     try:
         ingest = IngestAgent()
         ingest_result = ingest.run(url, goal)
-    
+
         study = StudyAgent()
         study_result = study.run(
             goal=goal,

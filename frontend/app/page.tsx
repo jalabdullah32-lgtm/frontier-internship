@@ -5,8 +5,8 @@ import { Sparkles } from "lucide-react"
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { Features } from "@/components/features"
+import { HowItWorks } from "@/components/how-it-works"
 import { InputSection } from "@/components/input-section"
-import { Footer } from "@/components/footer"
 import { FloatingElements } from "@/components/floating-elements"
 import { ResultsView } from "@/components/results-view"
 import { GoalInput } from "@/components/goal-input"
@@ -30,12 +30,12 @@ const LOADING_MESSAGES = [
 
 function MinimalNav() {
   return (
-    <div className="relative z-10 flex justify-center py-6">
-      <a href="/" className="flex items-center gap-2 group">
-        <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105 group-hover:rotate-3">
-          <Sparkles className="w-4 h-4 text-primary-foreground" />
+    <div className="relative z-10 flex justify-center py-7">
+      <a href="/" className="flex items-center gap-3 group">
+        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105 group-hover:rotate-3">
+          <Sparkles className="w-5 h-5 text-primary-foreground" />
         </div>
-        <span className="text-lg font-bold tracking-tight text-foreground">NebulaStudy</span>
+        <span className="text-2xl font-bold tracking-tight text-foreground">NebulaStudy</span>
       </a>
     </div>
   )
@@ -53,7 +53,6 @@ export default function Home() {
     e.preventDefault()
     if (!url.trim()) return
     setError("")
-
     try {
       const res = await fetch("/api/metadata", {
         method: "POST",
@@ -72,13 +71,11 @@ export default function Home() {
   const handleGoalSubmit = async (goal: string) => {
     if (!videoMeta) return
     setState("loading")
-
     let msgIndex = 0
     const interval = setInterval(() => {
       msgIndex = (msgIndex + 1) % LOADING_MESSAGES.length
       setLoadingMsg(msgIndex)
     }, 3000)
-
     try {
       const res = await fetch("/api/analyze", {
         method: "POST",
@@ -155,7 +152,6 @@ export default function Home() {
         <FloatingElements />
         <MinimalNav />
         <ResultsView data={results} onBack={handleBack} />
-        <Footer />
       </main>
     )
   }
@@ -188,20 +184,24 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <Footer />
       </main>
     )
   }
 
-  // Home screen — new page flow
+  // Home screen
   return (
     <main className="relative min-h-screen overflow-hidden">
       <FloatingElements />
       <Header />
+      {error && (
+        <div className="relative z-10 mx-auto max-w-6xl px-6 pt-4">
+          <p className="text-sm text-destructive font-mono bg-destructive/10 px-4 py-2 rounded-xl">{error}</p>
+        </div>
+      )}
       <Hero url={url} setUrl={setUrl} onSubmit={handleUrlSubmit} error={error} />
       <Features />
+      <HowItWorks />
       <InputSection url={url} setUrl={setUrl} onSubmit={handleUrlSubmit} error={error} />
-      <Footer />
     </main>
   )
 }
