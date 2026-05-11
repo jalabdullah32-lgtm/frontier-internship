@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from "react"
 import { Play } from "lucide-react"
 
 const EXAMPLE_URLS = [
-  "https://youtube.com/watch?v=MIT-Algorithms",
-  "https://youtube.com/watch?v=CS50-Lecture",
-  "https://youtube.com/watch?v=Physics-101",
-  "https://youtube.com/watch?v=Organic-Chem",
+  "https://www.youtube.com/watch?v=OHdch7qP6pA",
+  "https://www.youtube.com/watch?v=ET8FzJ6Hhz4",
+  "https://www.youtube.com/watch?v=scL2pbCgMRQ",
+  "https://www.youtube.com/watch?v=YwFmQFe2fHw",
 ]
 
 interface TypingInputProps {
@@ -24,13 +24,11 @@ export function TypingInput({ value, onChange, className }: TypingInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // Don't animate if user has typed something
     if (value) return
 
     const currentUrl = EXAMPLE_URLS[urlIndex]
 
     if (isTyping) {
-      // Typing phase
       if (charIndex < currentUrl.length) {
         const timeout = setTimeout(() => {
           setPlaceholder(currentUrl.slice(0, charIndex + 1))
@@ -38,14 +36,12 @@ export function TypingInput({ value, onChange, className }: TypingInputProps) {
         }, 50 + Math.random() * 30)
         return () => clearTimeout(timeout)
       } else {
-        // Finished typing, pause then delete
         const timeout = setTimeout(() => {
           setIsTyping(false)
         }, 2000)
         return () => clearTimeout(timeout)
       }
     } else {
-      // Deleting phase
       if (charIndex > 0) {
         const timeout = setTimeout(() => {
           setPlaceholder(currentUrl.slice(0, charIndex - 1))
@@ -53,7 +49,6 @@ export function TypingInput({ value, onChange, className }: TypingInputProps) {
         }, 30)
         return () => clearTimeout(timeout)
       } else {
-        // Finished deleting, move to next URL
         const timeout = setTimeout(() => {
           setUrlIndex((urlIndex + 1) % EXAMPLE_URLS.length)
           setIsTyping(true)
@@ -72,7 +67,7 @@ export function TypingInput({ value, onChange, className }: TypingInputProps) {
         placeholder={placeholder || "Paste YouTube URL..."}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full pl-12 pr-4 h-14 rounded-2xl bg-card border border-border/50 text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+        className="w-full pl-12 pr-4 h-14 rounded-2xl bg-white border border-border/50 text-black placeholder:text-transparent focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
       />
       {!value && (
         <span className="absolute left-12 top-1/2 -translate-y-1/2 text-muted-foreground/70 pointer-events-none">

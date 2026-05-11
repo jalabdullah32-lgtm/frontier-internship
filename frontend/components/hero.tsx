@@ -48,7 +48,7 @@ export function Hero({ url, setUrl, onSubmit }: HeroProps) {
                 </Button>
               </div>
               <p className="mt-3 text-xs text-muted-foreground font-mono">
-                Works with any public YouTube video
+                Public YouTube only · Private or restricted videos not supported
               </p>
             </form>
           </div>
