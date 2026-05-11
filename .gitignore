@@ -2,6 +2,8 @@
 .env
 .env.local
 .env*.local
+.env.development.local
+.env.production.local
 
 # Python
 venv/
@@ -25,3 +27,5 @@ build/
 # Misc
 .DS_Store
 *.log
+npm-debug.log*
+pnpm-debug.log*
