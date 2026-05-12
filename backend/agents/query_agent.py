@@ -66,17 +66,22 @@ class QueryAgent:
 
     def translate(self, materials, language):
         try:
-            print(f"DEBUG materials keys: {materials.keys()}")
-            print(f"DEBUG language: {language}")
             translator = GoogleTranslator(source="en", target=language)
+            
+            def translate_text(text):
+                if len(text) <= 4500:
+                    return translator.translate(text)
+                # Split into chunks and translate each
+                chunks = [text[i:i+4500] for i in range(0, len(text), 4500)]
+                return " ".join(translator.translate(chunk) for chunk in chunks)
+            
             return {
-                "short": translator.translate(materials["short"]),
-                "medium": translator.translate(materials["medium"]),
-                "full": translator.translate(materials["full"]),
+                "short": translate_text(materials["short"]),
+                "medium": translate_text(materials["medium"]),
+                "full": translate_text(materials["full"]),
             }
         except Exception as e:
             raise ValueError(f"Translation failed: {str(e)}")
-
     def export_pdf(self, outline, summaries, flashcards):
     # packages everything into downloadable PDF
         try:
