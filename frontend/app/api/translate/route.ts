@@ -9,11 +9,11 @@ export async function POST(req: NextRequest) {
     if (!language) return NextResponse.json({ error: "No language provided" }, { status: 400 })
 
     const res = await fetch(
-      `${BACKEND_URL}/translate?language=${encodeURIComponent(language)}`,
+      `${BACKEND_URL}/translate`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(materials),
+        body: JSON.stringify({ materials, language }),
       }
     )
 
