@@ -65,19 +65,15 @@ class QueryAgent:
 
 
     def translate(self, materials, language):
-    # translates outline, summaries, flashcards to target language
-    # Might use claude to translate, we'll see
         try:
             translator = GoogleTranslator(source="en", target=language)
-
-            return{
-                "outline":translator.translate(materials["outline"]),
-                "summaries":translator.translate(materials["summaries"]),
-                "flashcards":translator.translate(materials["flashcards"])
+            return {
+                "short": translator.translate(materials["short"]),
+                "medium": translator.translate(materials["medium"]),
+                "full": translator.translate(materials["full"]),
             }
-        except Exception:
-            raise ValueError("Translation failed")
-
+        except Exception as e:
+            raise ValueError(f"Translation failed: {str(e)}")
 
     def export_pdf(self, outline, summaries, flashcards):
     # packages everything into downloadable PDF
