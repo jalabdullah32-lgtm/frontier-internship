@@ -66,6 +66,8 @@ class QueryAgent:
 
     def translate(self, materials, language):
         try:
+            print(f"DEBUG materials keys: {materials.keys()}")
+            print(f"DEBUG language: {language}")
             translator = GoogleTranslator(source="en", target=language)
             return {
                 "short": translator.translate(materials["short"]),
