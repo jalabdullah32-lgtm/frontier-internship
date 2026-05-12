@@ -411,29 +411,32 @@ export function ResultsView({ data, onBack }: ResultsViewProps) {
     }
   }
 
-  const handleExport = async () => {
-    setExporting(true)
-    try {
-      const params = new URLSearchParams({
+const handleExport = async () => {
+  setExporting(true)
+  try {
+    const res = await fetch("/api/export", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         outline: data.outline,
         summaries: data.summaries,
         flashcards: data.flashcards,
-      })
-      const res = await fetch(`/api/export?${params.toString()}`)
-      if (!res.ok) throw new Error("Export failed")
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = "study_pack.pdf"
-      a.click()
-      URL.revokeObjectURL(url)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setExporting(false)
-    }
+      }),
+    })
+    if (!res.ok) throw new Error("Export failed")
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "study_pack.pdf"
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setExporting(false)
   }
+}
 
   const seekVideo = (time: string) => {
     const seconds = timeToSeconds(time)

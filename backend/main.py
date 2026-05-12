@@ -15,6 +15,11 @@ class TranslateRequest(BaseModel):
     materials: dict
     language: str
 
+class ExportRequest(BaseModel):
+    outline: str
+    summaries: str
+    flashcards: str
+
 @app.post("/analyze")
 async def analyze(url: str, goal: str):
     if len(goal.split()) > 50:
@@ -72,11 +77,11 @@ async def regenerate(card: str, transcript: str):
     except Exception:
         raise HTTPException(status_code=500, detail="Something went wrong")
 
-@app.get("/export")
-async def export(outline: str, summaries: str, flashcards: str):
+@app.post("/export")
+async def export(request: ExportRequest):
     try:
         query = QueryAgent()
-        result = query.export_pdf(outline, summaries, flashcards)
+        result = query.export_pdf(request.outline, request.summaries, request.flashcards)
         return Response(
             content=result,
             media_type="application/pdf",
