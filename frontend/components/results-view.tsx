@@ -411,33 +411,177 @@ export function ResultsView({ data, onBack }: ResultsViewProps) {
     }
   }
 
-const handleExport = async () => {
-  setExporting(true)
-  try {
-    const res = await fetch("/api/export", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        outline: data.outline,
-        summaries: data.summaries,
-        flashcards: data.flashcards,
-      }),
-    })
-    if (!res.ok) throw new Error("Export failed")
-    const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "study_pack.pdf"
-    a.click()
-    URL.revokeObjectURL(url)
-  } catch (err) {
-    console.error(err)
-  } finally {
-    setExporting(false)
-  }
-}
+const handleExport = () => {
+  const printWindow = window.open('', '_blank')
+  if (!printWindow) return
 
+  const content = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Study Pack — NebulaStudy</title>
+      <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+          font-family: 'Plus Jakarta Sans', system-ui, sans-serif; 
+          background: #8EEAB4;
+          color: #1a2e1a;
+          padding: 40px 20px;
+        }
+        .page { 
+          max-width: 800px; 
+          margin: 0 auto;
+        }
+        .cover {
+          background: rgba(255,255,255,0.88);
+          border-radius: 24px;
+          padding: 48px;
+          margin-bottom: 24px;
+          border: 1px solid rgba(0,0,0,0.08);
+        }
+        .cover-title {
+          font-size: 36px;
+          font-weight: 700;
+          color: #1a2e1a;
+          margin-bottom: 8px;
+        }
+        .cover-sub {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 12px;
+          color: #4a7a4a;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+        .section-card {
+          background: rgba(255,255,255,0.88);
+          border-radius: 24px;
+          padding: 36px 48px;
+          margin-bottom: 24px;
+          border: 1px solid rgba(0,0,0,0.08);
+          page-break-inside: avoid;
+        }
+        .section-label {
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.15em;
+          color: #4a7a4a;
+          margin-bottom: 20px;
+        }
+        h1 { font-size: 26px; font-weight: 700; color: #1a2e1a; margin-bottom: 20px; }
+        h2 { 
+          font-size: 16px; 
+          font-weight: 700; 
+          color: #1a2e1a; 
+          margin-top: 24px; 
+          margin-bottom: 8px;
+          padding-left: 12px;
+          border-left: 3px solid #1a2e1a;
+        }
+        h3 { font-size: 13px; font-weight: 600; color: #2d4a2d; margin-top: 12px; margin-bottom: 4px; }
+        p { font-size: 13px; line-height: 1.7; color: #2d4a2d; margin-bottom: 4px; }
+        .timestamp { 
+          display: inline-block;
+          background: rgba(26,46,26,0.08);
+          color: #1a2e1a;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 10px;
+          font-weight: 500;
+          padding: 2px 8px;
+          border-radius: 6px;
+          margin-right: 8px;
+        }
+        .timestamp-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+        .timestamp-row p { margin: 0; }
+        .key-terms { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.08); }
+        .term { 
+          background: rgba(26,46,26,0.06); 
+          padding: 3px 10px; 
+          border-radius: 100px; 
+          font-size: 11px;
+          color: #2d4a2d;
+        }
+        .card {
+          background: #f8fdf8;
+          border: 1px solid rgba(0,0,0,0.08);
+          border-radius: 16px;
+          padding: 20px 24px;
+          margin-bottom: 12px;
+          page-break-inside: avoid;
+        }
+        .card-q { font-size: 13px; font-weight: 600; color: #1a2e1a; margin-bottom: 10px; }
+        .card-a { font-size: 12px; color: #2d4a2d; line-height: 1.6; padding-left: 12px; border-left: 2px solid rgba(26,46,26,0.2); }
+        .card-ts { 
+          font-family: 'JetBrains Mono', monospace; 
+          font-size: 10px; 
+          color: #4a7a4a; 
+          margin-top: 8px;
+        }
+        hr { border: none; border-top: 1px solid rgba(0,0,0,0.08); margin: 16px 0; }
+        @media print { 
+          body { background: white; padding: 0; }
+          .section-card { border-radius: 0; border: none; border-bottom: 1px solid #eee; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="page">
+        <div class="cover">
+          <p class="cover-sub">NebulaStudy — AI Study Pack</p>
+          <h1 class="cover-title">${data.title || 'Lecture Notes'}</h1>
+          ${data.channel ? `<p class="cover-sub">${data.channel}</p>` : ''}
+        </div>
+
+        <div class="section-card">
+          <p class="section-label">01 — Outline</p>
+          ${data.outline.split('\n').map(line => {
+            if (!line.trim()) return ''
+            if (line.startsWith('## SECTION')) return `<h2>${line.replace(/^##\s*SECTION\s*\d+:\s*/, '')}</h2>`
+            if (line.startsWith('### ')) return `<h3>${line.replace(/^###\s*/, '')}</h3>`
+            if (line.match(/^- \*\*(\d+:\d+)\*\*/)) {
+              return line.replace(/^- \*\*(\d+:\d+)\*\*\s*(.+)/, 
+                '<div class="timestamp-row"><span class="timestamp">$1</span><p>$2</p></div>')
+            }
+            if (line.startsWith('Key Terms')) return '<h3>Key Terms</h3><div class="key-terms">'
+            if (line.startsWith('- ') || line.startsWith('* ')) return `<p>• ${line.slice(2)}</p>`
+            if (line === '---') return '</div><hr/>'
+            return `<p>${line}</p>`
+          }).join('')}
+        </div>
+
+        <div class="section-card">
+          <p class="section-label">02 — Summaries</p>
+          ${data.summaries.split('\n').map(line => {
+            if (!line.trim()) return '<br/>'
+            if (line.startsWith('# ')) return `<h2>${line.slice(2)}</h2>`
+            if (line.startsWith('## ')) return `<h3>${line.slice(3)}</h3>`
+            if (line.startsWith('- ')) return `<p>• ${line.slice(2)}</p>`
+            return `<p>${line}</p>`
+          }).join('')}
+        </div>
+
+        <div class="section-card">
+          <p class="section-label">03 — Flashcards</p>
+          ${data.flashcards.split(/CARD \d+[^:]*:/).slice(1).map(card => {
+            const front = card.match(/Front: (.*?)$/m)?.[1]?.trim() || ''
+            const back = card.match(/Back: ([\s\S]*?)(?=Type:|Timestamp:|$)/)?.[1]?.trim() || ''
+            const ts = card.match(/Timestamp: (.*?)$/m)?.[1]?.trim() || ''
+            return `<div class="card">
+              <div class="card-q">Q: ${front}</div>
+              <div class="card-a">${back}</div>
+              ${ts ? `<div class="card-ts">📍 ${ts}</div>` : ''}
+            </div>`
+          }).join('')}
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+  printWindow.document.write(content)
+  printWindow.document.close()
+  printWindow.print()
+}
   const seekVideo = (time: string) => {
     const seconds = timeToSeconds(time)
     if (iframeRef.current) {
